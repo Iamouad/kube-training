@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: sinatra-api
+  name: sinatra-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sinatra-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sinatra-api
+        app: sinatra
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: "4567"
+        name: sinatra-api
+        image: docker.io/iamouad/sinatra-sample:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4567
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 4567
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
+    
